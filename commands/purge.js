@@ -10,7 +10,7 @@ exports.run = async (client, message, args) => {
 
     await message.channel.bulkDelete(amount);
 
-    message.channel.send(`:fire: Purged \`${amount} messages.\``);
+    message.channel.send(`:fire: Purged \`${amount}\` messages.`);
 };
 
 exports.info = {
