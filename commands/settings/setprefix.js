@@ -15,5 +15,7 @@ exports.run = (client, message, args) => {
 exports.info = {
     name: 'setprefix',
     usage: 'setprefix [prefix]',
-    description: 'Sets or resets the custom prefix for this guild'
+    description: 'Sets or resets the custom prefix for this guild',
+    guildOnly: true,
+    permissions: ['MANAGE_GUILD']
 };

@@ -91,5 +91,6 @@ exports.run = (client, message, args) => {
 exports.info = {
     name: 'trigger',
     usage: 'trigger <list|info|add|edit|remove> [name] [content]',
-    description: 'Creates, removes or edits custom triggers'
+    description: 'Creates, removes or edits custom triggers',
+    permissions: ['MANAGE_GUILD']
 };

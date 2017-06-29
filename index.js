@@ -15,8 +15,20 @@ token || (() => {
     process.exit(1);
 })();
 
+client.getPrefix = (id) => {
+    if (!id) {
+        return client.prefix;
+    }
+
+    return guildSettings.get(id).prefix || client.prefix;
+};
+
 client.on('ready', () => {
     client.commands.load(client, path.resolve(__dirname, 'commands'));
+
+    client.user.setAvatar('./avatar.png').catch(() => { /* ignore */ })
+    client.user.setStatus('dnd');
+    client.user.setGame(`${client.prefix}prefix | ${client.prefix}help`);
 
     client.generateInvite(['MANAGE_MESSAGES', 'KICK_MEMBERS', 'BAN_MEMBERS', 'MANAGE_CHANNELS', 'MANAGE_NICKNAMES']).then(console.log);
 });
@@ -27,7 +39,7 @@ client.on('message', async (message) => {
     }
 
     // If we're in a guild, get the guild prefix, defaulting to the base prefix
-    const prefix = message.guild ? guildSettings.get(message.guild.id).prefix || client.prefix : client.prefix;
+    const prefix = message.guild ? client.getPrefix(message.guild.id) : client.prefix;
 
     if (message.guild) {
         const settings = guildSettings.get(message.guild.id);
