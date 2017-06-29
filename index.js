@@ -48,7 +48,7 @@ client.on('message', async (message) => {
         const trigger = triggers.find(t => message.content.startsWith(t.name.replace(/{prefix}/g, prefix)));
 
         if (trigger) {
-            const args = message.content.substr(trigger.name.length).split(' ');
+            const args = message.content.substr(trigger.name.replace(/{prefix}/g, prefix).length).split(' ');
 
             const output = trigger.content
                 .replace(/{user}/g, message.author.toString())
@@ -97,7 +97,7 @@ async function handleCommand(message, commandLabel, args) {
 
     if (command.info.permissions instanceof Array) {
         if (!message.member.hasPermission(command.info.permissions)) {
-            return message.channel.send(`:x: You need the permission \`${command.info.permissions[0]}\` to do that!`);
+            return message.channel.send(`:x: You need the permission \`${command.info.permissions[0]}\` to do that.`);
         }
     }
 
