@@ -12,9 +12,9 @@ function makeCommand(type, endpoint, transformer) {
 
             await message.channel.send({
                 embed: new RichEmbed().setImage(transformer(response.body))
-            })
+            });
         }
-    }
+    };
 }
 
 module.exports = [

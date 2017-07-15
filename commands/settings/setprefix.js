@@ -3,7 +3,7 @@ exports.run = (client, message, args) => {
 
     if (args.length < 1) {
         delete settings.prefix;
-        message.channel.send(':white_check_mark: Reset prefix to default.')
+        message.channel.send(':white_check_mark: Reset prefix to default.');
     } else {
         settings.prefix = args[0];
         message.channel.send(`:white_check_mark: Set prefix to \`${args[0]}\`.`);

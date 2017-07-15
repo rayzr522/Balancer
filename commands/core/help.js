@@ -21,7 +21,8 @@ exports.run = async (client, message, args) => {
         });
     }
 
-    const commands = args[0].toLowerCase() === 'all' ? client.commands.all() : [client.commands.find(args[0])];
+    const commands = (args[0].toLowerCase() === 'all' ? client.commands.all() : [client.commands.find(args[0])])
+        .filter(command => !command.info.hidden);
 
     if (commands.length < 1) {
         throw `No commands could be found that matched \`${args[0]}\`.`;

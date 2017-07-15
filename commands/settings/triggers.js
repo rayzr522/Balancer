@@ -31,7 +31,7 @@ exports.run = (client, message, args) => {
         }
 
         // Prevent backticks from breaking things.
-        const content = command.content.replace(/`/g, '\`');
+        const content = command.content.replace(/`/g, '\\`');
 
         return message.channel.send(`\`${name}\` \`\`\`\n${content}\n\`\`\``);
     } else if (sub === 'add') {

@@ -8,9 +8,9 @@ exports.run = async (client, message, args) => {
         throw 'You can only purge between 1 and 100 messages.';
     }
 
-    await message.channel.bulkDelete(amount);
+    const messages = await message.channel.bulkDelete(Math.min(amount + 1, 100), true);
 
-    message.channel.send(`:fire: Purged \`${amount}\` messages.`);
+    (await message.channel.send(`:fire: Purged \`${messages.size - 1}\` messages.`)).delete(5000);
 };
 
 exports.info = {
