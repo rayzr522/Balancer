@@ -35,7 +35,8 @@ client.on('ready', async () => {
         'KICK_MEMBERS',
         'BAN_MEMBERS',
         'MANAGE_CHANNELS',
-        'MANAGE_NICKNAMES'
+        'MANAGE_NICKNAMES',
+        'EMBED_LINKS'
     ]).then(invite => {
         client.invite = invite;
     });
