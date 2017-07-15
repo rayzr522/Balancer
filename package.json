@@ -7,9 +7,13 @@
   "author": "Rayzr",
   "license": "MIT",
   "scripts": {
-    "start": "node --harmony ."
+    "start": "node --harmony .",
+    "lint": "eslint --fix index.js commands plugins",
+    "background": "screen -dmS balancer yarn start"
   },
   "dependencies": {
+    "chalk": "^2.0.1",
+    "cheerio": "^1.0.0-rc.2",
     "common-tags": "^1.4.0",
     "discord.js": "^11.1.0",
     "dotenv": "^4.0.0",
@@ -19,5 +23,7 @@
     "readdir-recursive": "^0.0.4",
     "snekfetch": "^3.1.11"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "eslint": "^4.2.0"
+  }
 }
