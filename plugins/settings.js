@@ -10,7 +10,7 @@ db.defaults({ settings: [] })
 exports.get = (id) => {
     const value = db.get('settings')
         .find({ id })
-        .value()
+        .value();
 
     if (typeof value === 'undefined') {
         return db.get('settings')
@@ -19,7 +19,7 @@ exports.get = (id) => {
     }
 
     return value;
-}
+};
 
 exports.set = (id, settings) => {
     const value = db.get('settings')
@@ -28,4 +28,12 @@ exports.set = (id, settings) => {
         .write();
 
     return value;
-}
+};
+
+exports.global = (settings) => {
+    if (typeof settings === 'undefined') {
+        return this.get('GLOBAL');
+    } else {
+        return this.set('GLOBAL', settings);
+    }
+};

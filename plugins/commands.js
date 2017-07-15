@@ -13,14 +13,6 @@ function assignDefaults(item) {
     return item;
 }
 
-function flatMap(memory, next) {
-    if (next instanceof Array) {
-        next.reduce(flatMap, memory);
-    } else {
-        memory.push(next);
-    }
-}
-
 function checkCommand(command) {
     let error;
 
@@ -47,7 +39,8 @@ function logErrors(object) {
     }
 
     if (object && object.error instanceof Error) {
-        console.error(`Failed to load command "${path.basename(object.command.file)}": ${object.error.message}`);
+        console.error(object.error.message);
+        console.error(`Failed to load command "${path.basename(object.command.file)}"`);
         return false;
     }
 
@@ -68,7 +61,7 @@ exports.load = (bot, dir) => {
                 object.file = file;
                 return object;
             } catch (ignore) {
-
+                console.error('Failed to read ' + file + ': ' + ignore);
             }
         })
         .reduce((memory, command) => {
@@ -85,7 +78,7 @@ exports.load = (bot, dir) => {
 
     this._commands.forEach(command => {
         if (typeof command.init === 'function') {
-            command.init(client);
+            command.init(this.client);
         }
     });
 };
@@ -95,6 +88,6 @@ exports.find = (label) => {
 
     return this._commands.find(item => item.info.name === commandLabel ||
         item.info.aliases.map(alias => alias.toLowerCase()).indexOf(commandLabel) > -1);
-}
+};
 
 exports.all = () => this._commands;

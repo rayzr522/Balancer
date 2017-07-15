@@ -11,7 +11,7 @@ client.prefix = process.env.PREFIX;
 const token = process.env.TOKEN;
 
 token || (() => {
-    console.error('Please configure your .env file with a bot token.')
+    console.error('Please configure your .env file with a bot token.');
     process.exit(1);
 })();
 
@@ -23,25 +23,40 @@ client.getPrefix = (id) => {
     return guildSettings.get(id).prefix || client.prefix;
 };
 
-client.on('ready', () => {
+client.on('ready', async () => {
     client.commands.load(client, path.resolve(__dirname, 'commands'));
 
-    client.user.setAvatar('./avatar.png').catch(() => { /* ignore */ })
+    client.user.setAvatar('./avatar.png').catch(() => { /* ignore */ });
     client.user.setStatus('dnd');
     client.user.setGame(`${client.prefix}prefix | ${client.prefix}help`);
 
-    client.generateInvite(['MANAGE_MESSAGES', 'KICK_MEMBERS', 'BAN_MEMBERS', 'MANAGE_CHANNELS', 'MANAGE_NICKNAMES']).then(console.log);
+    client.generateInvite([
+        'MANAGE_MESSAGES',
+        'KICK_MEMBERS',
+        'BAN_MEMBERS',
+        'MANAGE_CHANNELS',
+        'MANAGE_NICKNAMES'
+    ]).then(invite => {
+        client.invite = invite;
+    });
+
+    require('./plugins/console').tryStart(client);
 });
 
-client.on('message', async (message) => {
+client.on('message', async message => {
     if (message.author.bot) {
         return;
     }
 
     // If we're in a guild, get the guild prefix, defaulting to the base prefix
-    const prefix = message.guild ? client.getPrefix(message.guild.id) : client.prefix;
+    const prefix = message.guild ? client.getPrefix(message.guild.id) : '';
 
     if (message.guild) {
+        if (message.content === `${client.prefix}prefix`) {
+            // Server-prefix-agnostic check
+            return message.channel.send(`The prefix in this server is \`${prefix}\``);
+        }
+
         const settings = guildSettings.get(message.guild.id);
 
         const triggers = settings.triggers || [];
@@ -73,11 +88,11 @@ client.on('message', async (message) => {
         }
     }
 
-    if (message.guild && !message.content.startsWith(prefix)) {
+    if (!message.content.startsWith(prefix)) {
         return;
     }
 
-    const split = message.content.substr(message.guild ? prefix.length : 0).split(' ');
+    const split = message.content.substr(prefix.length).split(' ');
     const commandLabel = split[0];
     const args = split.slice(1);
 
@@ -115,4 +130,8 @@ async function handleCommand(message, commandLabel, args) {
 
 process.on('unhandledRejection', console.error);
 
-client.login(token);
+client.start = function () {
+    return client.login(token);
+};
+
+client.start();
