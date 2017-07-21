@@ -53,7 +53,9 @@ client.on('message', async message => {
     const prefix = message.guild ? client.getPrefix(message.guild.id) : '';
 
     if (message.guild) {
-        if (message.content === `${client.prefix}prefix`) {
+        const input = message.content.toLowerCase();
+
+        if (input === `${client.prefix}prefix`) {
             // Server-prefix-agnostic check
             return message.channel.send(`The prefix in this server is \`${prefix}\``);
         }
@@ -61,7 +63,7 @@ client.on('message', async message => {
         const settings = guildSettings.get(message.guild.id);
 
         const triggers = settings.triggers || [];
-        const trigger = triggers.find(t => message.content.startsWith(t.name.replace(/{prefix}/g, prefix)));
+        const trigger = triggers.find(t => input.startsWith(t.name.replace(/{prefix}/g, prefix).toLowerCase()));
 
         if (trigger) {
             const args = message.content.substr(trigger.name.replace(/{prefix}/g, prefix).length).split(' ');
