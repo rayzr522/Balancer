@@ -28,7 +28,12 @@ client.on('ready', async () => {
 
     client.user.setAvatar('./avatar.png').catch(() => { /* ignore */ });
     client.user.setStatus('dnd');
-    client.user.setGame(`${client.prefix}prefix | ${client.prefix}help`);
+    client.user.setPresence({
+        game: {
+            name: `${client.prefix}prefix | ${client.prefix}help`,
+            type: 0
+        }
+    });
 
     client.generateInvite([
         'MANAGE_MESSAGES',
