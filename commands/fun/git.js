@@ -19,12 +19,14 @@ exports.run = async (client, message, args) => {
 
     const embed = new RichEmbed();
 
-    $('#explore-trending>div>ul>li>div').each(function () {
-        const tag = $('a', $(this)).text().trim();
+    $('article.border-bottom').each(function () {
+        const tag = $('.f3>a', $(this)).text().trim().replace(' / ', '/');
         const description = $('p', $(this)).text().trim().replace(/\n/g, '');
 
         embed.addField(`\`${tag}\``, `${description}\n\n[View on GitHub](https://github.com/${tag})\n\u200b`);
     });
+
+    embed.setFooter(`Requested by ${message.author.tag}`);
 
     message.channel.send({ embed });
 };
