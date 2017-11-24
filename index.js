@@ -55,11 +55,12 @@ client.on('message', async message => {
     }
 
     if (message.guild) {
+        const prefix = client.getPrefix(message.guild.id);
         const input = message.content.toLowerCase();
 
         if (input === `${client.prefix}prefix`) {
             // Server-prefix-agnostic check
-            return message.channel.send(`The prefix in this server is \`${client.getPrefix(message.guild.id)}\``);
+            return message.channel.send(`The prefix in this server is \`${prefix}\``);
         }
 
         const settings = guildSettings.get(message.guild.id);
