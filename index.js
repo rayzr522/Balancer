@@ -54,15 +54,12 @@ client.on('message', async message => {
         return;
     }
 
-    // If we're in a guild, get the guild prefix, defaulting to the base prefix
-    const prefix = message.guild ? client.getPrefix(message.guild.id) : '';
-
     if (message.guild) {
         const input = message.content.toLowerCase();
 
         if (input === `${client.prefix}prefix`) {
             // Server-prefix-agnostic check
-            return message.channel.send(`The prefix in this server is \`${prefix}\``);
+            return message.channel.send(`The prefix in this server is \`${client.getPrefix(message.guild.id)}\``);
         }
 
         const settings = guildSettings.get(message.guild.id);
@@ -96,16 +93,36 @@ client.on('message', async message => {
         }
     }
 
-    if (!message.content.startsWith(prefix)) {
+    const content = getContent(message);
+    if (!content) {
         return;
     }
 
-    const split = message.content.substr(prefix.length).split(' ');
+    const split = content.split(' ');
     const commandLabel = split[0];
     const args = split.slice(1);
 
     handleCommand(message, commandLabel, args);
 });
+
+function getContent(message) {
+    const content = message.content;
+
+    if (!message.guild) {
+        return content;
+    }
+
+    const prefix = client.getPrefix(message.guild.id);
+    if (content.startsWith(prefix)) {
+        return content.substr(prefix.length);
+    }
+
+    const mention = client.user.toString();
+    if (content.startsWith(mention)) {
+        // Remove space at the start between mention and command
+        return content.substr(mention.length).replace(/^ /, '');
+    }
+}
 
 async function handleCommand(message, commandLabel, args) {
     const command = client.commands.find(commandLabel);
