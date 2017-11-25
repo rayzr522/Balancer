@@ -64,14 +64,8 @@ exports.load = (bot, dir) => {
                 console.error('Failed to read ' + file + ': ' + ignore);
             }
         })
-        .reduce((memory, command) => {
-            if (command instanceof Array) {
-                memory = memory.concat(command);
-            } else {
-                memory.push(command);
-            }
-            return memory;
-        }, [])
+        // Using .concat handles the possibility of command being an array or a single command
+        .reduce((memory, command) => memory.concat(command), [])
         .map(checkCommand)
         .filter(logErrors)
         .map(assignDefaults);
